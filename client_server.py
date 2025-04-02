@@ -58,7 +58,7 @@ if response.status_code == 200:
         data = response.json()  
         name = data["name"]
 
-    print(f"\nName: {name.capitalize()}")
+        print(f"\nName: {name.capitalize()}")
 else:
         
     print("Error fetching Pokemon data")
