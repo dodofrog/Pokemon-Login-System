@@ -7,9 +7,10 @@ except socket.error as err:
     print(f"Socket open error: {err}")
     exit()
 
-socket.connect("localhost,", 5000)
+serverBinding = ("localhost", 6000)
+socket.connect(serverBinding)
 
-check = input("Sign in(1) or Log in(2)")
+check = input("Create Account(1) or Log in(2): ")
 while True:
     if check == '1':
         socket.send(check.encode())    
