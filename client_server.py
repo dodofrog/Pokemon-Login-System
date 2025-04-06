@@ -1,5 +1,4 @@
 import sqlite3
-import threading
 import socket 
 import random
 import requests 
@@ -11,7 +10,6 @@ try:
 except socket.error as err: 
     print('socket open error: {} \n'.format(err))
     exit()
-
 
 serverBinding = ("localhost", 6000)
 ss.bind(serverBinding)
@@ -32,43 +30,35 @@ def verify(email, password):
        print(f"[S]: Database error: {e}")
        return False
 
-def createAccount(email, password):
-    try: 
-        conn = sqlite3.connect('blueprint.db')
-        cursor = conn.cursor()
-        cursor.execute("INSERT INTO users (username, password) VALUES (?, ?)", (email, password))
-        conn.commit()
-        conn.close()
+def createAccount(password):
+    try:    
         #pokemon code starts here
-        
         url = f"https://pokeapi.co/api/v2/pokemon/?limit=1"
         response = requests.get(url)
         if response.status_code == 200:
             totalPoke = response.json()["count"]
             random_id = random.randint(1,totalPoke)
-
             url = f"https://pokeapi.co/api/v2/pokemon/{random_id}"
             response = requests.get(url)
 
- 
             if response.status_code == 200: 
                 data = response.json()
-                name = data["name"]
-
-                print(f"\nName: {name.capitalize()}")
+                username = data["name"]
+                print(f"\nName: {username.capitalize()}")
+                conn = sqlite3.connect("blueprint.db")
+                cursor = conn.cursor()
+                cursor.execute("INSERT INTO users (username,password) VALUES (?,?)",(username,password))
+                conn.commit()
+                conn.close() 
             else: 
-                print("Error fetching Pokémon data.")
-
+                print("Error fetching Pokémon data")
         else: 
             print("Error fetching total Pokémon count.")
         return True
     except Exception as e:
         print(f"[S]: Database error: {e}")
-        return False
-    
-
-
-
+        return False 
+            
 def start_connection(client_socket):
     try:
         check = client_socket.recv(1024).decode().strip()
@@ -95,17 +85,9 @@ def start_connection(client_socket):
         client_socket.close()
         print("[S]: Connection closed")
 
-try:             
-    while True: 
-        client_socket, client_address = ss.accept()
-        print(f"[S]: Connection established with {client_address}")
-        client_thread = threading.Thread(target=start_connection,args=(client_socket,))
-        client_thread.start()
 
-finally: 
-    ss.close()
-    print("[S]: Server socket closed")
-
-
-
-        
+client_socket, client_address = ss.accept()
+print(f"[S]: Connection established with {client_address}")
+start_connection(client_socket)
+ss.close()
+print("[S]: Server socket closed")

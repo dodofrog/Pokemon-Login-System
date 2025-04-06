@@ -1,6 +1,6 @@
 import sqlite3
 
-sqliteConnection = sqlite3.connect('blueprint.db')
+sqliteConnection = sqlite3.connect('secureDatabase.db')
 cursor = sqliteConnection.cursor()
 
 cursor.execute('''CREATE TABLE IF NOT EXISTS users
