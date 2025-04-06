@@ -18,7 +18,7 @@ print("[S]: Server is listening on port 6000")
 
 def verify(email, password): 
     try: 
-        conn = sqlite3.connect('blueprint.db')
+        conn = sqlite3.connect('secureDatabase.db')
         cursor = conn.cursor()
         cursor.execute("SELECT password FROM users  WHERE username = ?",(email,))
         user = cursor.fetchone()
@@ -30,7 +30,7 @@ def verify(email, password):
        print(f"[S]: Database error: {e}")
        return False
 
-def createAccount(password):
+def createAccount(username, password):
     try:    
         #pokemon code starts here
         url = f"https://pokeapi.co/api/v2/pokemon/?limit=1"
