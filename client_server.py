@@ -30,38 +30,61 @@ def verify(email, password):
        print(f"[S]: Database error: {e}")
        return False
 
-def createAccount(username, password):
+def createAccount(email, password):
+    try: 
+        conn = sqlite3.connect('secureDatabase.db')
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO users (username, password) VALUES (?, ?)", (email, password))
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        print(f"[S]: Database error: {e}")
+        return False
+
+   
+def createPokemonAccount(password):
     try:    
         #pokemon code starts here
-        url = f"https://pokeapi.co/api/v2/pokemon/?limit=1"
+        url = f"https://pokeapi.co/api/v2/pokemon/?limit=151" ## changing this to 151 for gen 1 pokemon 
         response = requests.get(url)
         if response.status_code == 200:
-            totalPoke = response.json()["count"]
-            random_id = random.randint(1,totalPoke)
-            url = f"https://pokeapi.co/api/v2/pokemon/{random_id}"
-            response = requests.get(url)
 
+            poke_list = response.json()["results"]
+            chosen = random.choice(poke_list)
+            name = chosen["name"]
+            poke_url = chosen["url"]
+
+            ## totalPoke = response.json()["count"]
+            ## random_id = random.randint(1,totalPoke)
+            ## url = f"https://pokeapi.co/api/v2/pokemon/{random_id}"
+            ## response = requests.get(url)
+            response = requests.get(poke_url)
             if response.status_code == 200: 
                 data = response.json()
                 username = data["name"]
-                print(f"\nName: {username.capitalize()}")
-                conn = sqlite3.connect("blueprint.db")
+                print(f"\nNew Pokemon Username: {username.capitalize()}")
+                
+                conn = sqlite3.connect("secureDatabase.db")
                 cursor = conn.cursor()
                 cursor.execute("INSERT INTO users (username,password) VALUES (?,?)",(username,password))
                 conn.commit()
                 conn.close() 
+                return True
             else: 
                 print("Error fetching Pokémon data")
+                return False
         else: 
             print("Error fetching total Pokémon count.")
         return True
     except Exception as e:
         print(f"[S]: Database error: {e}")
-        return False 
+        return False    
             
 def start_connection(client_socket):
     try:
         check = client_socket.recv(1024).decode().strip()
+        userPoke = client_socket.recv(1024).decode().strip()
         email = client_socket.recv(1024).decode().strip()
         password = client_socket.recv(1024).decode().strip()
         if check == "2":
@@ -73,13 +96,20 @@ def start_connection(client_socket):
             else:
                 client_socket.send("Invalid Login".encode())
         else: 
-            print(f"[S] Recieved NEW email: {email}")
-            print(f"[S]: Recieved NEW password: {password}")
-
-            if createAccount(email, password):
-                client_socket.send("Account Creation Successful".encode())
+            if(userPoke == '1'):
+                print(f"[S]: Recieved NEW password: {password}")
+                if createPokemonAccount(password):
+                    client_socket.send("Account Creation Successful".encode())
+                else:
+                    client_socket.send("Account Creation Unsuccessful".encode())
             else:
-                client_socket.send("Account Creation Unsuccessful".encode())
+                print(f"[S] Recieved NEW email: {email}")
+                print(f"[S]: Recieved NEW password: {password}")
+                
+                if createAccount(email, password):
+                    client_socket.send("Account Creation Successful".encode())
+                else:
+                    client_socket.send("Account Creation Unsuccessful".encode())
             
     finally:
         client_socket.close()

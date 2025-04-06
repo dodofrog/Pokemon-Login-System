@@ -1,6 +1,6 @@
 # Pokemon Login System
 ## Project Overview
-This project is a rudamentary login system that allows users to create accounts and login into them using **Python** and **SQLite3** within a **client-server model**. The Pokemon API allows users to make their username a random pokemon.
+This project is a rudamentary login system that allows users to create accounts and login into them using **Python** and **SQLite3** within a **client-server model**. The Pokemon API allows users to make their username a random gen 1 pokemon.
 
 ## Directions
 ### 1. Create the Databse
@@ -24,3 +24,4 @@ This project is a rudamentary login system that allows users to create accounts 
 - Ishani Rajeshirke 
 - Divena Deshmukh
 - Casey Fritz
+- Sean Angel
