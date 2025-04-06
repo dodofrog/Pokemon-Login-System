@@ -1,8 +1,8 @@
 import sqlite3
 import threading
 import socket 
-# import requests
 import random
+import requests 
 
 try: 
     ss = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -39,38 +39,34 @@ def createAccount(email, password):
         cursor.execute("INSERT INTO users (username, password) VALUES (?, ?)", (email, password))
         conn.commit()
         conn.close()
+        #pokemon code starts here
+        
+        url = f"https://pokeapi.co/api/v2/pokemon/?limit=1"
+        response = requests.get(url)
+        if response.status_code == 200:
+            totalPoke = response.json()["count"]
+            random_id = random.randint(1,totalPoke)
+
+            url = f"https://pokeapi.co/api/v2/pokemon/{random_id}"
+            response = requests.get(url)
+
+ 
+            if response.status_code == 200: 
+                data = response.json()
+                name = data["name"]
+
+                print(f"\nName: {name.capitalize()}")
+            else: 
+                print("Error fetching Pokémon data.")
+
+        else: 
+            print("Error fetching total Pokémon count.")
         return True
     except Exception as e:
         print(f"[S]: Database error: {e}")
         return False
+    
 
-
-# # pokemon code starts here
-# url = f"https://pokeapi.co/api/v2/pokemon/?limit=1"
-# response = requests.get(url)
-
- 
-# if response.status_code == 200:
-#     totalPoke = response.json()["count"]
-#     randomPoke = random.randint(1,totalPoke)
-
-#     url = f"https://pokeapi.co/api/v2/pokemon/{randomPoke}"
-#     response = requests.get(url)
-
-#     if response.status_code == 200:
-
-#         data = response.json()  
-#         name = data["name"]
-
-#         print(f"\nName: {name.capitalize()}")
-# else:
-        
-#     print("Error fetching Pokemon data")
-# else: 
-#     print("Error fetching total Pokemon count.")
-
-   
- 
 
 
 def start_connection(client_socket):
