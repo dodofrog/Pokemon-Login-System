@@ -12,8 +12,8 @@ This project is a rudimentary login system that allows users to create accounts 
 
 ## Files
 - ***Database:*** Uses SQLite to store client usernames/passwords.
-- ***Server*** Bridges client and database, creates accounts, communicates with the Pokemon API, and verifies users.
-- ***Socket*** Directly communicates with the client, allowing users to log in/create an account.
+- ***Server:*** Bridges client and database, creates accounts, communicates with the Pokemon API, and verifies users.
+- ***Socket:*** Directly communicates with the client, allowing users to log in/create an account.
 
 ## Dependencies
 - Python 3
