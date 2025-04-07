@@ -1,9 +1,9 @@
 # Pokemon Login System
 ## Project Overview
-This project is a rudamentary login system that allows users to create accounts and login into them using **Python** and **SQLite3** within a **client-server model**. The Pokemon API allows users to make their username a random gen 1 pokemon.
+This project is a rudimentary login system that allows users to create accounts and log into them using **Python** and **SQLite** within a **client-server model**. The Pokemon API allows users to make their username a random Gen-1 Pokemon.
 
 ## Directions
-### 1. Create the Databse
+### 1. Create the Database
 - Run `python3 client_database.py` in the terminal in order to create the database (if not already created)
 ### 2. Start the Server
 - Run `python3 client_server.py` in the terminal in order to start the server and start listening for client connections.
@@ -13,7 +13,7 @@ This project is a rudamentary login system that allows users to create accounts 
 ## Files
 - ***Database:*** Uses SQLite to store client usernames/passwords.
 - ***Server*** Bridges client and database, creates accounts, communicates with the Pokemon API, and verifies users.
-- ***Socket*** Directly communicates with client, allowing users to log in/create an account.
+- ***Socket*** Directly communicates with the client, allowing users to log in/create an account.
 
 ## Dependencies
 - Python 3
@@ -24,4 +24,4 @@ This project is a rudamentary login system that allows users to create accounts 
 - Ishani Rajeshirke 
 - Divena Deshmukh
 - Casey Fritz
-- Sean Angel
+- Sean Gelacio
